@@ -1,0 +1,2 @@
+# LogiCal
+Logic calculator
