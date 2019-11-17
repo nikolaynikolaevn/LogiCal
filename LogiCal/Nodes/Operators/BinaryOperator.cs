@@ -21,6 +21,10 @@
         {
             return "(" + leftNode.ToString() + " " + Label + " " + rightNode.ToString() + ")";
         }
+        public sealed override string ToASCIIString()
+        {
+            return "(" + leftNode.ToASCIIString() + " " + ShortLabel + " " + rightNode.ToASCIIString() + ")";
+        }
         public sealed override string ToPrefixString()
         {
             return ShortLabel + "(" + leftNode.ToPrefixString() + "," + rightNode.ToPrefixString() + ")";
@@ -35,6 +39,11 @@
             nodeRefStr + rightNode.ID +
             "\n" +
             rightNode.GenerateBinaryTree();
+        }
+        public override void ReplaceObjectVariable(char from, char to)
+        {
+            leftNode.ReplaceObjectVariable(from, to);
+            rightNode.ReplaceObjectVariable(from, to);
         }
     }
 }

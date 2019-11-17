@@ -49,6 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExistentialQuantifier.cs" />
+    <Compile Include="Nodes\PredicateNode.cs" />
+    <Compile Include="Quantifier.cs" />
+    <Compile Include="STBinaryTreeDrawer.cs" />
     <Compile Include="BinaryTreeDrawer.cs" />
     <Compile Include="Calculator.cs" />
     <Compile Include="DirectMessage.cs" />
@@ -87,7 +91,10 @@
     <Compile Include="Nodes\TrueNode.cs" />
     <Compile Include="Nodes\VariableNode.cs" />
     <Compile Include="Row.cs" />
+    <Compile Include="ST.cs" />
+    <Compile Include="STElement.cs" />
     <Compile Include="TruthTable.cs" />
+    <Compile Include="UniversalQuantifier.cs" />
     <EmbeddedResource Include="GraphForm.resx">
       <DependentUpon>GraphForm.cs</DependentUpon>
     </EmbeddedResource>

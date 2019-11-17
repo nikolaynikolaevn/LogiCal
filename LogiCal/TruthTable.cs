@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace LogiCal
 {
-    sealed class TruthTable
+    public sealed class TruthTable
     {
         public char[] Variables { get; }
         public int VariablesCount { get; }
@@ -13,8 +13,9 @@ namespace LogiCal
         public string[] Rows { get; private set; }
         public int CombinationsCount { get; }
         private char[] truthValues;
-        public string HashValue { get; private set; }
-        private Node expression;
+        public string BinHashValue { get; private set; }
+        public string HexHashValue { get; private set; }
+        public Node Proposition { get; }
         public TruthTable Simplified { get; }
 
         /*
@@ -23,19 +24,23 @@ namespace LogiCal
 
         public TruthTable(char[] variables, Node root)
         {
-            Variables = variables;
-            VariablesCount = variables.Length;
-            expression = root;
-            CombinationsCount = 1 << VariablesCount;
-            RowsString = GenerateNewTruthTable();
-            Simplified = Simplify(GetRows());
+            if (root != null)
+            {
+                Variables = variables;
+                VariablesCount = variables.Length;
+                Proposition = root;
+
+                CombinationsCount = 1 << VariablesCount;
+                RowsString = GenerateNewTruthTable();
+                Simplified = Simplify(GetRowsMerged());
+            }
         }
 
         public TruthTable(char[] variables, Node root, string[] rows)
         {
             Variables = variables;
             VariablesCount = variables.Length;
-            expression = root;
+            Proposition = root;
             CombinationsCount = rows.Length;
             Rows = rows;
             truthValues = GetResultColumn();
@@ -67,12 +72,12 @@ namespace LogiCal
             string[] lines = GenerateTruthTableValues();
             truthValues = CalculateTruthTableChar();
 
-            temp[0] = string.Join("    ", Variables) + "    " + expression.ToString();
+            temp[0] = string.Join("    ", Variables) + "    " + Proposition.ToString();
             for (int k = 0; k < lines.Length; k++)
             {
                 temp[k + 1] = lines[k] + truthValues[k];
             }
-            HashValue = CalculateHexHash();
+            CalculateHash();
             return temp;
         }
 
@@ -80,12 +85,12 @@ namespace LogiCal
         {
             if (Rows == null) throw new Exception("Table does not exist.");
             string[] temp = new string[CombinationsCount + 1];
-            temp[0] = string.Join("    ", Variables) + "    " + expression.ToString();
+            temp[0] = string.Join("    ", Variables) + "    " + Proposition.ToString();
             for (int k = 0; k < Rows.Length; k++)
             {
                 temp[k + 1] = SplitString(Rows[k]);
             }
-            HashValue = CalculateHexHash();
+            CalculateHash();
             return temp;
         }
 
@@ -125,7 +130,7 @@ namespace LogiCal
             return new Row(temp);
         }
 
-        private Dictionary<string, bool> GetRows()
+        private Dictionary<string, bool> GetRowsMerged()
         {
             Dictionary<string, bool> temp = new Dictionary<string, bool>();
             for (int k = 0; k < Rows.Length; k++)
@@ -135,12 +140,22 @@ namespace LogiCal
             return temp;
         }
 
+        private string[] GetRows()
+        {
+            string[] temp = new string[Rows.Length];
+            for (int k = 0; k < Rows.Length; k++)
+            {
+                temp[k] = Rows[k] + truthValues[k];
+            }
+            return temp;
+        }
+
         private bool[] CalculateTruthTable()
         {
             bool[] truthColumn = new bool[CombinationsCount];
             for (int k = 0; k < CombinationsCount; k++)
             {
-                truthColumn[k] = expression.Calculate(GetRow(k));
+                truthColumn[k] = Proposition.Calculate(GetRow(k));
             }
             return truthColumn;
         }
@@ -150,16 +165,17 @@ namespace LogiCal
             char[] truthColumn = new char[CombinationsCount];
             for (int k = 0; k < CombinationsCount; k++)
             {
-                truthColumn[k] = (expression.Calculate(GetRow(k)) == true) ? '1' : '0';
+                truthColumn[k] = (Proposition.Calculate(GetRow(k)) == true) ? '1' : '0';
             }
             return truthColumn;
         }
 
-        private string CalculateHexHash()
+        private void CalculateHash()
         {
             char[] binChars = truthValues.Clone() as char[];
             Array.Reverse(binChars);
-            return Calculator.BinaryStringToHexString(new string(binChars));
+            BinHashValue = new string(binChars);
+            HexHashValue = Calculator.BinaryStringToHexString(new string(binChars));
         }
 
         /*
@@ -173,7 +189,7 @@ namespace LogiCal
             {
                 if (!row.Value) temp.Add(row.Key);
             }
-            return new TruthTable(Variables, expression, temp.ToArray());
+            return new TruthTable(Variables, Proposition, temp.ToArray());
         }
 
         private TruthTable Simplify(Dictionary<string, bool> mergedRows)
@@ -232,6 +248,63 @@ namespace LogiCal
             if (mergedRows.ContainsKey(r)) return false;
             mergedRows.Add(r, false);
             return true;
+        }
+
+        /*
+         * DNF
+        */
+
+        public Node CreateDNF()
+        {
+            string[] rows = GetRows();
+            List<string> disjuncts = new List<string>();
+            foreach (string row in rows)
+            {
+                if (row[VariablesCount] == '1') disjuncts.Add(GenerateConjunct(row));
+            }
+            string temp = "";
+            foreach (string disjunct in disjuncts)
+            {
+                if (temp == "") temp = disjunct;
+                else temp = GenerateVariableDisjunctionString(temp, disjunct);
+            }
+            Parser p = new Parser();
+            return p.ParseExpression(temp);
+        }
+
+        private string GenerateConjunct(string row)
+        {
+            string temp = "";
+            string dnf = "";
+            for (int i = 0; i < VariablesCount; i++)
+            {
+                if (row[i] == '1') dnf = Variables[i].ToString();
+                else if (row[i] == '*') dnf = GenerateUnknownVariableString(Variables[i]);
+                else dnf = GenerateVariableNegationString(Variables[i]);
+                if (temp == "") temp = dnf;
+                else temp = GenerateVariableConjunctionString(temp, dnf);
+            }
+            return temp;
+        }
+
+        private string GenerateVariableNegationString(char variable)
+        {
+            return new NegationSign(new VariableNode(variable)).ToPrefixString();
+        }
+
+        private string GenerateVariableConjunctionString(string str1, string str2)
+        {
+            return "&(" + str1 + "," + str2 + ")";
+        }
+
+        private string GenerateVariableDisjunctionString(string str1, string str2)
+        {
+            return "|(" + str1 + "," + str2 + ")";
+        }
+
+        private string GenerateUnknownVariableString(char variable)
+        {
+            return "|(" + variable + "," + GenerateVariableNegationString(variable) + ")";
         }
     }
 }

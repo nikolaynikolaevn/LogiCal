@@ -4,14 +4,14 @@ using System.Windows.Forms;
 
 namespace LogiCal
 {
-    sealed class BinaryTreeDrawer
+    sealed class STBinaryTreeDrawer
     {
-        private Node startNode;
+        private ST st;
         public delegate void GenerateCompleted();
         public event GenerateCompleted OnGenerate;
-        public BinaryTreeDrawer(Node startNode)
+        public STBinaryTreeDrawer(ST st)
         {
-            this.startNode = startNode;
+            this.st = st;
         }
         public string GenerateBinaryTreeGraph(string name)
         {
@@ -24,6 +24,7 @@ namespace LogiCal
             dot.Start();
             dot.WaitForExit();
             OnGenerate?.Invoke();
+            Process.Start(imageFileName);
             return imageFileName;
 
         }
@@ -37,8 +38,8 @@ namespace LogiCal
                 sw = new StreamWriter(fs);
 
                 sw.WriteLine("graph binaryTree {");
-                sw.WriteLine("   node [ fontname = \"Arial\" ]");
-                sw.WriteLine(startNode.GenerateBinaryTree());
+                sw.WriteLine("   node [ fontname = \"Arial\" shape=box ]");
+                sw.WriteLine(st.Root.GenerateBinaryTree());
                 sw.WriteLine("}");
             }
             catch (IOException)

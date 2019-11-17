@@ -15,6 +15,10 @@
         {
             return Label + "(" + childNode.ToString() + ")";
         }
+        public sealed override string ToASCIIString()
+        {
+            return ShortLabel + "(" + childNode.ToASCIIString() + ")";
+        }
         public sealed override string ToPrefixString()
         {
             return ShortLabel + "(" + childNode.ToPrefixString() + ")";
@@ -25,6 +29,10 @@
             "node" + ID + " -- node" + childNode.ID +
             "\n" +
             childNode.GenerateBinaryTree();
+        }
+        public override void ReplaceObjectVariable(char from, char to)
+        {
+            childNode.ReplaceObjectVariable(from, to);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace LogiCal
+﻿namespace LogiCal
 {
     sealed class ConjunctionSign : BinaryOperator
     {
@@ -16,6 +14,14 @@ namespace LogiCal
         public override Node Copy()
         {
             return new ConjunctionSign(leftNode.Copy(), rightNode.Copy());
+        }
+        public override Node Nandify()
+        {
+            return new NANDSign(new NANDSign(leftNode.Nandify(), rightNode.Nandify()), new NANDSign(leftNode.Nandify(), rightNode.Nandify()));
+        }
+        public override Node ReplaceObjectVariableNewNode(char from, char to)
+        {
+            return new ConjunctionSign(leftNode.ReplaceObjectVariableNewNode(from, to), rightNode.ReplaceObjectVariableNewNode(from, to));
         }
     }
 }

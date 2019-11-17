@@ -12,23 +12,18 @@ namespace LogiCal
 {
     internal partial class GraphForm : Form
     {
-        Node root;
-        BinaryTreeDrawer binaryTreeDrawer;
+        private Node root;
+        private BinaryTreeDrawer binaryTreeDrawer;
         internal GraphForm(Node root)
         {
             InitializeComponent();
             this.root = root;
-            GenerateImage(root, "binary-tree");
+            binaryTreeDrawer = new BinaryTreeDrawer(root);
+            pictureBoxBinaryTree.ImageLocation = binaryTreeDrawer.GenerateBinaryTreeGraph("binary-tree");
 
             ContextMenu cm = new ContextMenu();
             pictureBoxBinaryTree.ContextMenu = cm;
             cm.MenuItems.Add("Export", new EventHandler(ExportToPNG));
-        }
-
-        private void GenerateImage(Node n, string name)
-        {
-            binaryTreeDrawer = new BinaryTreeDrawer(n);
-            pictureBoxBinaryTree.ImageLocation = binaryTreeDrawer.GenerateBinaryTreeGraph(name);
         }
 
         public void ExportToPNG(object sender, System.EventArgs e)

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LogiCal.Nodes.Operators
+﻿namespace LogiCal
 {
     sealed class NANDSign : BinaryOperator
     {
@@ -20,6 +14,14 @@ namespace LogiCal.Nodes.Operators
         public override Node Copy()
         {
             return new NANDSign(leftNode.Copy(), rightNode.Copy());
+        }
+        public override Node Nandify()
+        {
+            return this;
+        }
+        public override Node ReplaceObjectVariableNewNode(char from, char to)
+        {
+            return new NANDSign(leftNode.ReplaceObjectVariableNewNode(from, to), rightNode.ReplaceObjectVariableNewNode(from, to));
         }
     }
 }

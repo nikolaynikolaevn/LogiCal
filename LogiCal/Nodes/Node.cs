@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace LogiCal
+﻿namespace LogiCal
 {
-    abstract class Node
+    public abstract class Node
     {
         private static int id = 1;
         public int ID { get; }
@@ -21,6 +19,18 @@ namespace LogiCal
             return "node" + ID + " [ label = \"" + ShortLabel + "\" ]\n";
         }
         public abstract string ToPrefixString();
-        //public abstract Node Nandify();
+        public abstract string ToASCIIString();
+        public abstract Node Nandify();
+
+        public override bool Equals(object other)
+        {
+            return (other is Node n) ? ToPrefixString().Equals(n.ToPrefixString()) : false;
+        }
+        public override int GetHashCode()
+        {
+            return ToPrefixString().GetHashCode();
+        }
+        public abstract Node ReplaceObjectVariableNewNode(char from, char to);
+        public abstract void ReplaceObjectVariable(char from, char to);
     }
 }

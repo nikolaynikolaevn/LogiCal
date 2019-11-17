@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace LogiCal
+﻿namespace LogiCal
 {
     sealed class NegationSign : UnaryOperator
     {
@@ -16,6 +14,14 @@ namespace LogiCal
         public override Node Copy()
         {
             return new NegationSign(childNode.Copy());
+        }
+        public override Node Nandify()
+        {
+            return new NANDSign(childNode.Nandify(), childNode.Nandify());
+        }
+        public override Node ReplaceObjectVariableNewNode(char from, char to)
+        {
+            return new NegationSign(childNode.ReplaceObjectVariableNewNode(from, to));
         }
     }
 }

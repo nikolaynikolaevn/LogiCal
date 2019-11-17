@@ -34,6 +34,9 @@
             // 
             // pictureBoxBinaryTree
             // 
+            this.pictureBoxBinaryTree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxBinaryTree.Location = new System.Drawing.Point(12, 12);
             this.pictureBoxBinaryTree.Name = "pictureBoxBinaryTree";
             this.pictureBoxBinaryTree.Size = new System.Drawing.Size(388, 299);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LogiCal
 {
-    class Row
+    public class Row
     {
         public Dictionary<char, bool> Values { get; }
         

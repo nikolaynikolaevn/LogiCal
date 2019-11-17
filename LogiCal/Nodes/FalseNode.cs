@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace LogiCal
+﻿namespace LogiCal
 {
     sealed class FalseNode : Node
     {
@@ -13,6 +11,7 @@ namespace LogiCal
         {
             return false;
         }
+        public override string ToASCIIString() => ToString();
         public override string ToString()
         {
             return Label;
@@ -25,5 +24,16 @@ namespace LogiCal
         {
             return new FalseNode();
         }
+        public override Node Nandify()
+        {
+            return this;
+        }
+
+        public override Node ReplaceObjectVariableNewNode(char from, char to)
+        {
+            return this;
+        }
+
+        public override void ReplaceObjectVariable(char from, char to) { }
     }
 }
