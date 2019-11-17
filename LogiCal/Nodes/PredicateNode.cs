@@ -57,7 +57,7 @@ namespace LogiCal
                 Variables[i]++;
             }
         }
-        public override Node ReplaceObjectVariableNewNode(char fromz, char to)
+        public override Node ReplaceObjectVariableNewNode(char from, char to)
         {
             PredicateNode temp = (PredicateNode)Copy();
             for (int i = 0; i < Variables.Length; i++)
