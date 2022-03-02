@@ -8,7 +8,7 @@ Input validation (input characters, white-space strip, missing brackets validati
 
 # UI
 -	Show whether an input expression is a proposition or predicate logic, show whether the expression is a tautology, easy comparing of hex values
--	Parse any infix expression by right click context menu
+-	Parse any infix expression by right clicking in a text box and using the Parse option in the context menu
 
 # Propositions
 Parsed in prefix notation, shown in infix notation, generate binary tree, truth tables, generate semantic tableau, simplify, DNF prefix and infix, NAND prefix and infix, binary/hex hash values, show if it is a tautology, nandifying
