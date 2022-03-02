@@ -17,7 +17,6 @@ Parsed in prefix notation, shown in infix notation, generate binary tree, truth 
 Parsed in prefix notation, shown in infix notation, generate binary tree, generate semantic tableau, show if it is a tautology
 
 # Other useful features
--	User-friendly UI
 -	Exporting graphs and binary trees to PNG
 -	Right-click quick parsing
 -	Input validation
