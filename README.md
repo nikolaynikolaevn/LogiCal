@@ -6,7 +6,7 @@ Predicate logic calculator
 # Parser
 Input validation (input characters, white-space strip, missing brackets validation, check bounding, check predicate mismatch, check if proposition), extract proposition and object variables
 
-# Interface
+# UI
 -	Show whether an input expression is a proposition or predicate logic, show whether the expression is a tautology, easy comparing of hex values
 -	Parse any infix expression by right click context menu
 
